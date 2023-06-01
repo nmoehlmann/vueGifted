@@ -1,44 +1,57 @@
 <template>
-  <div class="home flex-grow-1 d-flex flex-column align-items-center justify-content-center">
-    <div class="home-card p-5 bg-white rounded elevation-3">
-      <img
-        src="https://bcw.blob.core.windows.net/public/img/8600856373152463"
-        alt="CodeWorks Logo"
-        class="rounded-circle"
-      >
-      <h1 class="my-5 bg-dark text-white p-3 rounded text-center">
-        Vue 3 Starter
-      </h1>
-    </div>
-  </div>
+  <main class="container-fluid">
+
+    <section class="row">
+      <div class="col-12 d-flex flex-column align-items-center">
+        <GiftForm />
+      </div>
+    </section>
+
+    <section class="row">
+
+
+      <div v-for="g in gifts" :key="g.id" class="col-md-4">
+        <GiftCard :giftProp="g" />
+      </div>
+
+    </section>
+  </main>
 </template>
 
+
 <script>
+import { logger } from "../utils/Logger.js";
+import Pop from "../utils/Pop.js";
+import { giftsService } from "../services/GiftsService.js"
+import { onMounted } from "vue";
+import { computed } from "@vue/reactivity";
+import { AppState } from "../AppState.js";
+import GiftCard from '../components/GiftCard.vue'
+import GiftForm from '../components/GiftForm.vue'
+
 export default {
+  components: { GiftCard, GiftForm },
   setup() {
-    return {}
+
+    async function getGifts() {
+      try {
+        await giftsService.getGifts()
+      } catch (error) {
+        logger.error(error)
+        Pop.toast(error.message, 'error')
+      }
+    }
+
+    onMounted(() => {
+      getGifts()
+    })
+
+    return {
+      gifts: computed(() => AppState.gifts)
+    }
   }
 }
 </script>
 
-<style scoped lang="scss">
-.home {
-  display: grid;
-  height: 80vh;
-  place-content: center;
-  text-align: center;
-  user-select: none;
 
-  .home-card {
-    width: 50vw;
-
-    >img {
-      height: 200px;
-      max-width: 200px;
-      width: 100%;
-      object-fit: contain;
-      object-position: center;
-    }
-  }
-}
-</style>
+<style></style>
