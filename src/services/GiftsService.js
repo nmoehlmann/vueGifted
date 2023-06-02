@@ -4,6 +4,9 @@ import { logger } from "../utils/Logger.js"
 import { api } from "./AxiosService.js"
 
 class GiftsService {
+  async postGift(formData) {
+    const gift = 
+  }
   async openCloseGift(id) {
     // logger.log('FLIPPING BOOL')
     const gift = AppState.gifts.find(g => g.id == id)

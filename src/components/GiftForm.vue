@@ -1,5 +1,5 @@
 <template>
-  <form action="">
+  <form action="" @submit.prevent="postGift()">
     <div class="">
 
       <div class="mb-3">
@@ -18,6 +18,9 @@
 
 <script lang="ts">
 import { ref } from 'vue';
+import Pop from '../utils/Pop.js';
+import { logger } from '../utils/Logger.js';
+import { giftsService } from '../services/GiftsService.js';
 // import { Gift } from '../models/Gift.js';
 
 export default {
@@ -28,6 +31,16 @@ export default {
     })
     return {
       editable,
+      async postGift() {
+        try {
+          logger.log('submitting gift form')
+          const formData = editable.value
+          await giftsService.postGift(formData)
+        } catch (error) {
+          Pop.error(error.message)
+          logger.log(error)
+        }
+      }
     }
   }
 }
